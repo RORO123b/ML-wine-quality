@@ -2,14 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.calibration import LabelEncoder
-from sklearn.discriminant_analysis import StandardScaler
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import mean_squared_error
 
 def analiza_datelor(df):
     print("============== VALORI LIPSA ================")
@@ -51,34 +50,26 @@ def antrenarea_modelului(df):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Antrenarea modelului
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model = RandomForestRegressor(n_estimators=250, random_state=42)
     model.fit(X_train, y_train)
 
     # Predictia
     y_pred = model.predict(X_test)
 
     # Evaluarea modelului
-    print("============== Raport de clasificare ================")
-    print(classification_report(y_test, y_pred))
-
-    print("============== Acuratetea modelului ================")
-    print("Acuratetea: ", accuracy_score(y_test, y_pred))
+    print("============== Evaluarea modelului de regresie ================")
+    print("MSE: ", mean_squared_error(y_test, y_pred))
 
 df = pd.read_csv('winequalityN.csv')
-df['fixed acidity'] = df['fixed acidity'].fillna(df['fixed acidity'].mean())
-df['volatile acidity'] = df['volatile acidity'].fillna(df['volatile acidity'].mean())
-df['citric acid'] = df['citric acid'].fillna(df['citric acid'].mean())
-df['residual sugar'] = df['residual sugar'].fillna(df['residual sugar'].mean())
-df['chlorides'] = df['chlorides'].fillna(df['chlorides'].mean())
-df['pH'] = df['pH'].fillna(df['pH'].mean())
-df['sulphates'] = df['sulphates'].fillna(df['sulphates'].mean())
+
+for col in ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'pH', 'sulphates']:
+    df[col] = df[col].fillna(df[col].mean())
 
 encoder = LabelEncoder()
 df['type'] = encoder.fit_transform(df['type'])
 scaler = MinMaxScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
-scaler = StandardScaler()
-df[df.columns] = scaler.fit_transform(df[df.columns])
 print(df.head())
 
 # antrenarea_modelului(df)
+antrenarea_modelului(df)
