@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.calibration import LabelEncoder
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import MinMaxScaler
@@ -41,7 +40,7 @@ def analiza_datelor(df):
     plt.ylabel('Alcool')
     plt.show()
 
-def antrenarea_modelului(df):
+def antrenarea_modelului(df, quality_original):
     # Prelucrarea datelor
     X = df.drop('quality', axis=1)
     y = df['quality']
@@ -72,7 +71,25 @@ def antrenarea_modelului(df):
     # Salvarea modelului --> DONE
     ### joblib.dump(model, "model_forest.pkl")
 
+    y_test_original = quality_original.loc[y_test.index]
+    y_pred_original = y_pred * (quality_original.max() - quality_original.min()) + quality_original.min()
+    errors = y_test_original - y_pred_original
+
+    # Histograma erorilor
+    plt.figure(figsize=(12, 10))
+    df_errors = pd.DataFrame({
+        'error': errors,
+        'quality': y_test_original
+    })
+    sns.histplot(data=df_errors, x='error', bins=30, hue='quality', palette='coolwarm')
+    plt.title('Histograma erorilor (calitate reală - prezisă)')
+    plt.xlabel('Eroare')
+    plt.ylabel('Frecventa')
+    plt.show()
+
 df = pd.read_csv('winequalityN.csv')
+
+quality_original = df['quality'].copy()
 
 analiza_datelor(df)
 
@@ -84,4 +101,4 @@ df['type'] = encoder.fit_transform(df['type'])
 scaler = MinMaxScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
 
-antrenarea_modelului(df)
+antrenarea_modelului(df, quality_original)
