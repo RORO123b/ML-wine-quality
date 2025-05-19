@@ -6,10 +6,9 @@ from sklearn.calibration import LabelEncoder
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import mean_squared_error
+import joblib
 
 def analiza_datelor(df):
     print("============== VALORI LIPSA ================")
@@ -61,11 +60,15 @@ def antrenarea_modelului(df):
     print("============== Evaluarea modelului de regresie ================")
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     print(f"RMSE: {rmse}")
-    # Exportarea seturilor de date de antrenare și testare
+
+    # Exportarea seturilor de date de antrenare si testare
     train_set = pd.concat([X_train, y_train], axis=1)
     test_set = pd.concat([X_test, y_test], axis=1)
     train_set.to_csv('train_set.csv', index=False)
     test_set.to_csv('test_set.csv', index=False)
+
+    # Salvarea modelului
+    joblib.dump(model, "model_forest.pkl")
 
 df = pd.read_csv('winequalityN.csv')
 
@@ -78,5 +81,4 @@ scaler = MinMaxScaler()
 df[df.columns] = scaler.fit_transform(df[df.columns])
 print(df.head())
 
-# antrenarea_modelului(df)
-antrenarea_modelului(df)
+# antrenarea_modelului(df) --> DONE
