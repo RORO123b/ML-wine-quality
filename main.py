@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -47,7 +48,7 @@ def antrenarea_modelului(df):
     y = df['quality']
 
     # Impartirea setului de date in seturi de antrenare si testare
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
 
     # Antrenarea modelului
     model = RandomForestRegressor(n_estimators=250, random_state=42)
@@ -58,7 +59,13 @@ def antrenarea_modelului(df):
 
     # Evaluarea modelului
     print("============== Evaluarea modelului de regresie ================")
-    print("MSE: ", mean_squared_error(y_test, y_pred))
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print(f"RMSE: {rmse}")
+    # Exportarea seturilor de date de antrenare și testare
+    train_set = pd.concat([X_train, y_train], axis=1)
+    test_set = pd.concat([X_test, y_test], axis=1)
+    train_set.to_csv('train_set.csv', index=False)
+    test_set.to_csv('test_set.csv', index=False)
 
 df = pd.read_csv('winequalityN.csv')
 
