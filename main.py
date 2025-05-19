@@ -82,7 +82,7 @@ def antrenarea_modelului(df, quality_original):
         'quality': y_test_original
     })
     sns.histplot(data=df_errors, x='error', bins=30, hue='quality', palette='coolwarm')
-    plt.title('Histograma erorilor (calitate reală - prezisă)')
+    plt.title('Histograma erorilor (calitate reala - prezisa)')
     plt.xlabel('Eroare')
     plt.ylabel('Frecventa')
     plt.show()
