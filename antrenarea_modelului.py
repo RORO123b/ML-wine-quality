@@ -5,8 +5,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+import joblib
 
 df = pd.read_csv('winequalityN.csv')
+
+feature_names = ['type', 'fixed acidity', 'volatile acidity', 'citric acid',
+                 'residual sugar', 'chlorides', 'free sulfur dioxide',
+                 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol']
+
 
 for col in ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'pH', 'sulphates']:
     df[col] = df[col].fillna(df[col].mean())
@@ -14,7 +20,7 @@ for col in ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar'
 encoder = LabelEncoder()
 df['type'] = encoder.fit_transform(df['type'])
 scaler = MinMaxScaler()
-df[df.columns] = scaler.fit_transform(df[df.columns])
+df[feature_names] = scaler.fit_transform(df[feature_names])
 
 # Prelucrarea datelor
 X = df.drop('quality', axis=1)
@@ -43,4 +49,4 @@ train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
 # Salvarea modelului --> DONE
-### joblib.dump(model, "model_forest.pkl")
+joblib.dump(model, "model_forest.pkl")
