@@ -2,6 +2,8 @@ import joblib
 import gradio as gr
 import pandas as pd
 import numpy as np
+from sklearn.calibration import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler
 
 model = joblib.load("model_forest.pkl")
 df = pd.read_csv('winequalityN.csv')
@@ -21,22 +23,17 @@ def prediction(type, fixed_acidity, volatile_acidity, citric_acid, residual_suga
     inputs = [type, fixed_acidity, volatile_acidity, citric_acid, residual_sugar,
               chlorides, free_sulfur_dioxide, total_sulfur_dioxide, density,
               pH, sulphates, alcohol]
-    
-    input_dict = dict(zip(feature_names, inputs))
-    
-    for key in input_dict:
-        if input_dict[key] is None:
-            if key == 'type':
-                input_dict[key] = 'red'
-            else:
-                input_dict[key] = df[key].mean()
-
-    input_dict['type'] = 1 if input_dict['type'] == 'red' else 0
-    input_data = pd.DataFrame([input_dict])
-
-    prediction_result = model.predict(input_data)[0]
-    prediction_result = np.clip(prediction_result, 3, 9)
-    return f"Predicted wine quality: {round(prediction_result, 2)}"
+    inputs = np.array(inputs).reshape(1, -1)
+    inputs = pd.DataFrame(inputs, columns=feature_names)
+    encoder = LabelEncoder()
+    df['type'] = encoder.fit_transform(df['type'])
+    inputs['type'] = encoder.fit_transform(inputs['type'])
+    scaler = MinMaxScaler()
+    scaler.fit(df[feature_names])
+    inputs[inputs.columns] = scaler.transform(inputs[feature_names])
+    prediction = model.predict(inputs)
+    # Rescalez predictia la intervalul original al calitatii
+    return f"Predicted quality: {round(prediction[0])}"
 
 interfata = gr.Interface(
     fn=prediction,
