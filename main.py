@@ -23,16 +23,21 @@ def prediction(type, fixed_acidity, volatile_acidity, citric_acid, residual_suga
     inputs = [type, fixed_acidity, volatile_acidity, citric_acid, residual_sugar,
               chlorides, free_sulfur_dioxide, total_sulfur_dioxide, density,
               pH, sulphates, alcohol]
+    
+    # Transform inputs intr-un DataFrame
     inputs = np.array(inputs).reshape(1, -1)
     inputs = pd.DataFrame(inputs, columns=feature_names)
+
+    # Preprocesare date
     encoder = LabelEncoder()
     df['type'] = encoder.fit_transform(df['type'])
     inputs['type'] = encoder.fit_transform(inputs['type'])
     scaler = MinMaxScaler()
     scaler.fit(df[feature_names])
     inputs[inputs.columns] = scaler.transform(inputs[feature_names])
+
+    # Predictia
     prediction = model.predict(inputs)
-    # Rescalez predictia la intervalul original al calitatii
     return f"Predicted quality: {round(prediction[0])}"
 
 interfata = gr.Interface(
