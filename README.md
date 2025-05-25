@@ -1,4 +1,4 @@
-# ML pentru prezicerea calitatii vinului
+# Barbulescu Robert Cristian 315CD - ML pentru prezicerea calitatii vinului
 
 Acest proiect de machine-learning are ca scop prezicerea calitatii unui vin prin intermediul unui Random Forest Regressor.
 
