@@ -33,3 +33,15 @@ plt.title('Boxplot al continutului de alcool in functie de calitate')
 plt.xlabel('Calitate')
 plt.ylabel('Alcool')
 plt.show()
+
+# Matricea de corelatie
+plt.figure(figsize=(12, 10))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm')
+plt.title("Matricea de corelatie")
+plt.show()
+
+# Violinplot
+plt.figure(figsize=(12, 10))
+sns.violinplot(x='quality', y='volatile acidity', data=df)
+plt.title('Volatile Acidity in functie de Quality')
+plt.show()
