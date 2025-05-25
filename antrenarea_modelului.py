@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+import seaborn as sns
 import joblib
 
 df = pd.read_csv('winequalityN.csv')
@@ -49,4 +51,18 @@ train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
 # Salvarea modelului --> DONE
-joblib.dump(model, "model_forest.pkl")
+### joblib.dump(model, "model_forest.pkl")
+
+errors = y_test - y_pred
+
+# Histograma erorilor
+plt.figure(figsize=(12, 10))
+df_errors = pd.DataFrame({
+    'error': errors,
+    'quality': y_test
+})
+sns.histplot(data=df_errors, x='error', bins=30, hue='quality', palette='coolwarm')
+plt.title('Histograma erorilor (calitate reală - prezisă)')
+plt.xlabel('Eroare')
+plt.ylabel('Frecventa')
+plt.show()
