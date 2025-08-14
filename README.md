@@ -12,7 +12,7 @@ Acest proiect de machine-learning are ca scop prezicerea calitatii unui vin prin
 
 Pentru a imbunatati acuratetea predictiilor, am aplicat un MinMaxScaler pentru a normaliza valorile caracteristicilor intre 0 si 1. <br>
 Tipul vinului este encodat astfel: vinurile albe → 1, vinurile rosii → 0. Aceasta transformare ajuta modelul sa proceseze datele in mod eficient. <br>
-In acest fel, prin intermediul Random Forest Regressor -ului se obtine ML cu ***[RMSE](https://en.wikipedia.org/wiki/Root_mean_square_deviation) = 0.56***
+In acest fel, prin intermediul Random Forest Regressor -ului se obtine ML cu ***[RMSE](https://en.wikipedia.org/wiki/Root_mean_square_deviation) = 0.56***. Asta inseamna ca am obtinut o precizie de **91%**(media calitatii vinului este de 5.81, iar 100% - (0.56 / 5.81)% = 91%).
 
 ## Histograma erorilor
 
