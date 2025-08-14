@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-df = pd.read_csv('winequalityN.csv')
+df = pd.read_csv('../winequalityN.csv')
 
 print("============== VALORI LIPSA ================")
 print(df.isnull().sum(), "\n")
